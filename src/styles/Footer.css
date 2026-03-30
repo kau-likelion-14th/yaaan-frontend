@@ -1,0 +1,92 @@
+.footer {
+  width: 100%;
+  background: #E5F8F1;
+  padding: 56px 0;
+
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* ✅ 가운데 정렬 제거: 왼쪽 기준으로 붙임 */
+.footer-inner {
+  width: 100%;
+
+  /* ✅ 헤더처럼 좌우 여백만 주고, 왼쪽 시작 */
+  padding-left: 48px;
+  padding-right: 48px;
+
+  box-sizing: border-box;
+}
+
+.footer-top {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 44px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.footer-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333333;
+  letter-spacing: -0.5px;
+}
+
+.footer-desc {
+  font-size: 20px;
+  color: #333333;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 쌍(상호명+값)들 사이 간격 / 줄 간격 */
+.footer-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  column-gap: 40px; /* ✅ (쌍)과 (쌍) 사이 */
+  row-gap: 12px;    /* ✅ 줄바꿈 됐을 때 줄 간격 */
+}
+
+/* ✅ 키-밸류(라벨-값) 사이 간격 */
+.footer-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px; /* ✅ label ↔ value 거리 여기서 조절 */
+}
+
+/* 색상 규칙 (너가 정한 거) */
+.footer-label {
+  color: #8F8F8F;
+  white-space: nowrap;
+}
+
+.footer-value {
+  color: #5C5C5C;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.footer-value-long {
+  white-space: normal;
+  line-height: 1.5;
+}
