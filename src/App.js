@@ -8,7 +8,6 @@ import { Routes, Route, useLocation  } from 'react-router-dom';
 import LoginPage from './pages/LoginPage/Loginpage';
 import FriendPage from './pages/FriendPage/FriendPage';
 import FriendDetailPage from './pages/FriendPage/FriendDetailPage';
-import { Routes, Route, useLocation } from 'react-router-dom';
 
 function App() {
   const location = useLocation();
