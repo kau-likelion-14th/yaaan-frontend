@@ -2,7 +2,6 @@
   "name": "nana-frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy" : "http://lte-dev-env.eba-uhe4na6c.ap-northeast-2.elasticbeanstalk.com",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
