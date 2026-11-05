@@ -15,6 +15,23 @@ const config = {
     FOLLOWINGS: "/api/follow/followings",
     DELETE: "/api/follow",
   },
+
+  PROFILE: {
+    DELETE: "/api/profile",
+    PUT: "/api/profile",
+    GET: "/api/profile",
+    INTRO: "/api/profile/intro",
+  },
+
+  STATISTICS: {
+    GET: "/api/statistic",
+  },
+
+  YOUTUBE: {
+    SEARCH: "/api/youtube/search",
+    SAVE: "/api/youtube/save",
+    ME: "/api/youtube/me",
+  },
 };
 
 export default config;
