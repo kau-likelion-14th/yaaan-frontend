@@ -1,18 +1,34 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useEffect } from "react";
 import profileImg from "../../assets/img/profile.png";
 import profileEdit from "../../assets/img/imgedit.png";
 import profilemusic from "../../assets/img/search.png";
+import { get, put, uploadProfile } from "../../Api";
+import config from "../../Config";
 
 const Profile = () => {
   const fileInputRef = useRef(null);
 
-  const [nickname] = useState("Likelion#1253");
+  const [nickname, setNickname] = useState("Likelion#1253");
   const [intro, setIntro] = useState("안녕하세요");
   const [song, setSong] = useState("내꺼하자 - 인피니트");
 
-  const [profileImageUrl] = useState(null);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  const fetchProfileData = async () => {
+    try {
+      const response = await get(config.PROFILE.GET);
+      
+      console.log("프로필 데이터:", response);
+    } catch (error) {
+      console.error("프로필 데이터를 가져오는 중 오류 발생:", error);
+    }
+  };
 
   const handleClickEditIcon = () => {
     fileInputRef.current?.click();
