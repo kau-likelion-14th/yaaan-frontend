@@ -4,22 +4,11 @@ import StatCard from "./StatCard";
 import { get } from "../../Api";
 import config from "../../Config";
 
-const [stats, setStats] = useState([
-    {
-      icon: "🔥",
-      title: "연속 달성일",
-      statistics: { value: 0, unit: "일" },
-    },
-    {
-      icon: "🎯",
-      title: "최근 30일 달성률",
-      statistics: { value: 0, unit: "%" },
-    },
-    {
-      icon: "⭐",
-      title: "가장 많이 완료한 요일",
-      statistics: { value: "정보 없음", unit: "" },
-    },
+const Status = () => {
+  const [ stats, setStats ] = useState([
+    { icon: "🔥", title: "연속 달성일", statistics: {value: 0, unit: "일"} },
+    { icon: "🎯", title: "최근 30일 달성률", statistics: {value: 0, unit: "%"} },
+    { icon: "⭐", title: "가장 많이 완료한 요일", statistics: {value: "토요일", unit: ""}}, 
   ]);
 
   useEffect(() => {
@@ -64,7 +53,6 @@ const [stats, setStats] = useState([
     return days[day] || day || "정보 없음";
   };
 
-
   return (
     <div className="status-container">
       {stats.map((stats, idx) => (
@@ -75,5 +63,6 @@ const [stats, setStats] = useState([
       ))}
     </div>
   );
+};
 
 export default Status;

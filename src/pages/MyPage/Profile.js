@@ -72,14 +72,43 @@ const Profile = () => {
 
   const displayImageSrc = previewUrl || profileImageUrl || profileImg;
 
-  const handleSave = () => {
-    console.log("저장될 프로필 데이터:", {
-      intro,
-      song,
-      selectedImageFile,
-    });
+  const handleSave = async () => {
+    try {
+      // 1. 한 줄 소개 수정
+      await put(config.PROFILE.INTRO, {
+        introduce: intro,
+      });
 
-    alert("프로필이 임시로 저장됐어요! (API 연결 전)");
+      // 2. 새로운 이미지가 있을 때만 업로드
+      if (selectedImageFile) {
+        await uploadProfile(
+          config.PROFILE.PUT,
+          { imageFile: selectedImageFile, },
+          { imageField: "image", }
+        );
+      }
+
+      // 3. 최신 프로필 조회
+      await fetchProfileData();
+
+      // 4. 이미지 미리보기 상태 초기화
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
+      setPreviewUrl(null);
+      setSelectedImageFile(null);
+
+      alert("프로필이 저장되었습니다!");
+    } catch (error) {
+      console.error("프로필 저장 실패:", error);
+
+      const message =
+        error.response?.data?.message ??
+        "프로필 저장에 실패했습니다.";
+
+      alert(message);
+    }
   };
 
   return (
