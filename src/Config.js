@@ -22,6 +22,10 @@ const config = {
     DELETE: "/api/profile",
     INTRO: "/api/profile/intro",
   },
+
+  STATISTICS: {
+    GET: "/api/statistic",
+  },
 };
 
 export default config;

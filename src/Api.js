@@ -86,6 +86,12 @@ api.interceptors.response.use(
 
 );
 
+const validateContentType = (response) => {
+  const contentType = response.headers?.["content-type"] || "";
+  if (!contentType.includes("json")) {
+    console.warn("JSON이 아닌 응답 Content-Type:", contentType);
+  }
+};
 
 // ===== 공통 요청 함수들 =====
 
@@ -124,6 +130,25 @@ export const patch = async (endpoint, data = {}, options = {}) => {
   return response.data;
 };
 
+export const uploadImage = async (
+  endpoint,
+  imageFile,
+  { fieldName = "file", method = "post", ...options } = {}
+) => {
+  const formData = new FormData();
+  formData.append(fieldName, imageFile);
+
+  const response = await api.request({
+    url: endpoint,
+    method, // "post" | "put" | "patch"
+    data: formData,
+    headers: { "Content-Type": "multipart/form-data" },
+    ...options,
+  });
+
+  validateContentType(response);
+  return response.data;
+};
 
 export const uploadImageWithJson = async (
   endpoint,

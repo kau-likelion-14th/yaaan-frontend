@@ -23,8 +23,34 @@ const Profile = () => {
   const fetchProfileData = async () => {
     try {
       const response = await get(config.PROFILE.GET);
+
+      const result = response?.result;
+
+      console.log("프로필 데이터:", result);
       
-      console.log("프로필 데이터:", response);
+      if(!result) return;
+
+      setNickname(result.username ?? "");
+      setIntro(result.intro ?? "");
+      setProfileImageUrl(result.profileImageUrl ?? null);
+
+      const songResponse = await get(config.YOUTUBE.ME);
+
+      if(
+        songResponse?.isSuccess === false ||
+        !Array.isArray(songResponse?.result)
+      ) {
+        throw new Error("유효하지 않은 노래 데이터 형식");
+      }
+
+      const songs = [...songResponse.result].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      const latest = songs[0];
+
+      setSong(latest? `${latest.title}` - `${latest.artist}` : "");
+      
     } catch (error) {
       console.error("프로필 데이터를 가져오는 중 오류 발생:", error);
     }
