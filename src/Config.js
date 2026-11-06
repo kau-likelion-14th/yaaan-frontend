@@ -39,21 +39,9 @@ const config = {
   },
 
   TODOS: {
-    DELETE_BY_DATE: (todoId, date) =>
-      `/api/todos/${todoId}/dates/${date}`,
-
-    DETAIL: (todoId) =>
-      `/api/todos/${todoId}`,
-
     LIST: "/api/todos",
-
     TOGGLE_COMPLETE: (todoId, date) =>
       `/api/todos/${todoId}/dates/${date}/complete`,
-
-    POST: "/api/todos",
-
-    PUT: (todoId) =>
-      `/api/todos/${todoId}`,
   },
 };
 

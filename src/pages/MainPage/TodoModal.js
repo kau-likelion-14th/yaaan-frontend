@@ -9,12 +9,11 @@ const TodoModal = ({
     onDelete,
     initialTodo,
     categories,
-    saving = false,
 }) => {
     const isEditMode = Boolean(initialTodo);
     const categoryKeys = Object.keys(categories || {});
 
-    const defaultCategory = categoryKeys[0] ?? "공부";
+    const defaultCategory = categoryKeys[0] ?? "";
 
     const [category, setCategory] = useState(defaultCategory);
     const [text, setText] = useState("");
@@ -33,7 +32,7 @@ const TodoModal = ({
     if (!isOpen) return null;
 
     const handleSave = () => {
-        if(!text.trim()) return;
+        if (!text.trim() || !category) return;
 
         onSave({
             text: text.trim(),
@@ -54,6 +53,7 @@ const TodoModal = ({
                 <div className="modal-section">
                     <div className="modal-label">카테고리</div>
                     <div className="modal-categories">
+                        {categoryKeys.length === 0 && <p>선택할 수 있는 카테고리가 없습니다.</p>}
                         {categoryKeys.map((c) => (
                             <label
                                 key={c}
@@ -97,14 +97,14 @@ const TodoModal = ({
                     <button
                         className={`leftbutton ${isEditMode ? '' : 'disabled'}`}
                         onClick={onDelete}
-                        disabled={!isEditMode || saving}
+                        disabled={!isEditMode}
                     >
                         삭제
                     </button>
                     <button
                         className={`rightbutton ${text.trim() ? '' : 'disabled'}`}
                         onClick={handleSave}
-                        disabled={!text.trim() || saving}
+                        disabled={!text.trim() || !category}
                     >
                         저장
                     </button>
