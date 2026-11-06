@@ -31,7 +31,7 @@ const Profile = () => {
       if(!result) return;
 
       setNickname(result.username ?? "");
-      setIntro(result.intro ?? "");
+      setIntro(result.introduction ?? "");
       setProfileImageUrl(result.profileImageUrl ?? null);
 
       const songResponse = await get(config.YOUTUBE.ME);
