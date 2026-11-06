@@ -1,46 +1,96 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import CustomCalendar from "./Calendar";
 import Todo from "./Todo";
+import { get } from "../../Api";
+import config from "../../Config";
 import "../../styles/MainPage.css";
 
-const toDateKey = (date) => { // 날짜 객체를 "YYYY-MM-DD" 문자열로 바꾸는 함수 (달력과 Todo가 같은 키를 쓰기 위함)
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+const toDateKey = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
-const uid = () => Date.now() + Math.random(); // 고유한 ID를 생성하는 함수 (할 일 항목 각각을 구분하기 위함)
-
-
 const MainPage = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date()); // 1. 현재 어떤 날짜가 선택되었는지 관리 (기본값: 오늘)
-  
-  const [todosByDate, setTodosByDate] = useState(() => { // 2. 전체 할 일 데이터를 관리하는 객체 상태
-    const todayKey = toDateKey(new Date()); // 오늘 날짜 키 생성
-    return {
-      [todayKey]: [ // 초기 데이터 (오늘 날짜에 예시 데이터 4개를 넣어둠)
-        { id: uid(), text: '리액트 공부하기', category: '공부', completed: true },
-        { id: uid(), text: '공부하기', category: '공부', completed: true },
-        { id: uid(), text: '헬스장 가기', category: '운동', completed: false },
-        { id: uid(), text: '동아리 회의 참석', category: '동아리', completed: false },
-      ]
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [viewDate, setViewDate] = useState(new Date());
+  const [todoData, setTodoData] = useState({ date: "", items: [] });
+  const [calendarData, setCalendarData] = useState({ month: "", days: {} });
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [calendarError, setCalendarError] = useState("");
+  const [todoError, setTodoError] = useState("");
+  const dateKey = toDateKey(selectedDate);
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth() + 1;
+  const monthKey = `${year}-${month}`;
+
+  useEffect(() => {
+    let active = true;
+    const fetchCalendar = async () => {
+      try {
+        const response = await get(config.CALENDAR.GET, { year, month });
+        if (response?.isSuccess === false) throw new Error(response.message);
+        const result = response.result;
+        const days = Object.fromEntries(
+          result.days.filter((day) => day.hasTodo).map((day) => [day.date, day.remaining])
+        );
+        if (active) {
+          setCalendarData({ month: monthKey, days });
+          setCalendarError("");
+        }
+      } catch (error) {
+        if (active) setCalendarError("캘린더를 불러오지 못했습니다.");
+      }
     };
-  });
+    fetchCalendar();
+    return () => { active = false; };
+  }, [year, month, monthKey, refreshKey]);
+
+  useEffect(() => {
+    let active = true;
+    const fetchTodos = async () => {
+      try {
+        const response = await get(config.TODOS.LIST, { date: dateKey });
+        if (response?.isSuccess === false) throw new Error(response.message);
+        const result = response.result;
+        const items = result.map((todo) => ({
+          id: todo.todoId, text: todo.description, category: todo.categoryName,
+          completed: todo.completed, routine: todo.routine ?? null,
+        }));
+        if (active) {
+          setTodoData({ date: dateKey, items });
+          setTodoError("");
+        }
+      } catch (error) {
+        if (active) setTodoError("할 일을 불러오지 못했습니다.");
+      }
+    };
+    fetchTodos();
+    return () => { active = false; };
+  }, [dateKey, refreshKey]);
+
   return (
     <div className="mainpage-container">
-      <CustomCalendar 
-        initialDate={selectedDate} // 현재 선택된 날짜 전달
-        onDateChange={setSelectedDate} // 달력에서 날짜 클릭 시 selectedDate를 바꾸는 함수 전달
-        todosByDate={todosByDate} // 달력에 숫자/별표를 표시하기 위해 전체 데이터 전달
+      {calendarError && <p role="alert">{calendarError}</p>}
+      {todoError && <p role="alert">{todoError}</p>}
+      <CustomCalendar
+        initialDate={selectedDate}
+        onDateChange={setSelectedDate}
+        onMonthChange={(date) => {
+          const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+          setViewDate(firstDay);
+          setSelectedDate(firstDay);
+        }}
+        remainingByDate={calendarData.month === monthKey ? calendarData.days : {}}
       />
-      <Todo 
-        selectedDate={selectedDate} // "지금 몇 일을 보고 있는가?" 정보 전달
-        todosByDate={todosByDate} // 할 일 목록을 보여주기 위한 데이터 전달
-        setTodosByDate={setTodosByDate} // 새로운 할 일을 추가하거나 완료 처리할 때 쓸 변경 함수 전달
+      <Todo
+        dateKey={dateKey}
+        todos={todoData.date === dateKey ? todoData.items : []}
+        onTodosChange={() => setRefreshKey((key) => key + 1)}
       />
     </div>
   );
 };
 
-export default MainPage; //MainPage라는 컴포넌트를 다른 파일에서도 가져다 쓸 수 있도록 "밖으로 내보내는" 명령어
+export default MainPage;
