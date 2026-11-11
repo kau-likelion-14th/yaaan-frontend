@@ -80,22 +80,24 @@ const MainPage = () => {
   }, [dateKey, refreshKey]);
 
   return (
-    <div className="mainpage-container">
+    <>
       {calendarError && <p role="alert">{calendarError}</p>}
       {todoError && <p role="alert">{todoError}</p>}
-      <CustomCalendar
-        initialDate={selectedDate}
-        onDateChange={setSelectedDate}
-        onMonthChange={setViewDate}
-        remainingByDate={remainingByDate}
-      />
-      <Todo
-        selectedDate={selectedDate}
-        todosByDate={todosByDate}
-        setTodosByDate={setTodosByDate}
-        onCompletedChange={() => setRefreshKey((key) => key + 1)}
-      />
-    </div>
+      <div className="mainpage-container">
+        <CustomCalendar
+          initialDate={selectedDate}
+          onDateChange={setSelectedDate}
+          onMonthChange={setViewDate}
+          remainingByDate={remainingByDate}
+        />
+        <Todo
+          selectedDate={selectedDate}
+          todosByDate={todosByDate}
+          setTodosByDate={setTodosByDate}
+          onCompletedChange={() => setRefreshKey((key) => key + 1)}
+        />
+      </div>
+    </>
   );
 };
 
