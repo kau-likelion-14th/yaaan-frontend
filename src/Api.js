@@ -88,7 +88,6 @@ api.interceptors.response.use(
 
 const validateContentType = (response) => {
   const contentType = response.headers?.["content-type"] || "";
-  // JSON이 아닌 응답도 있을 수 있어서 에러로 죽이지 않고 경고만
   if (!contentType.includes("json")) {
     console.warn("JSON이 아닌 응답 Content-Type:", contentType);
   }

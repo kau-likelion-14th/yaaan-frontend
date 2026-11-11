@@ -9,6 +9,9 @@ const config = {
   },
 
   FOLLOW: {
+    PROFILE: (id) => `/api/follow/${encodeURIComponent(id)}`,
+    TODOS: (id) => `/api/follow/${encodeURIComponent(id)}/todos`,
+    CALENDAR: (id) => `/api/follow/${encodeURIComponent(id)}/calendar`,
     AVAILABLE: "/api/follow",
     SEARCH: "/api/follow/search",
     CREATE: "/api/follow",
@@ -17,9 +20,9 @@ const config = {
   },
 
   PROFILE: {
-    DELETE: "/api/profile",
-    PUT: "/api/profile",
     GET: "/api/profile",
+    PUT: "/api/profile",
+    DELETE: "/api/profile",
     INTRO: "/api/profile/intro",
   },
 
@@ -31,6 +34,19 @@ const config = {
     SEARCH: "/api/youtube/search",
     SAVE: "/api/youtube/save",
     ME: "/api/youtube/me",
+    CALENDAR: {
+      GET: "/api/todos/calendar",
+    },
+
+    CATEGORIES: {
+      GET: "/api/categories",
+    },
+
+    TODOS: {
+      LIST: "/api/todos",
+      TOGGLE_COMPLETE: (todoId, date) =>
+        `/api/todos/${todoId}/dates/${date}/complete`,
+    },
   },
 };
 

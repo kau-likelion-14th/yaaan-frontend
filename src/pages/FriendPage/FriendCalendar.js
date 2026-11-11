@@ -1,6 +1,6 @@
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import React, { useState } from "react";
+import React from "react";
 import "../../styles/Calendar.css";
 
 const toDateKey = (date) => {
@@ -10,52 +10,28 @@ const toDateKey = (date) => {
   return `${y}-${m}-${d}`;
 };
 
-const dummyTodosByDate = {
-  "2026-05-04": [
-    { id: 1, title: "프론트 보충자료 읽기", completed: true },
-    { id: 2, title: "FriendCalendar 주석 달기", completed: false },
-  ],
-  "2026-05-06": [
-    { id: 3, title: "친구 페이지 과제 제출", completed: true },
-  ],
-  "2026-05-10": [
-    { id: 4, title: "React 복습하기", completed: false },
-    { id: 5, title: "props 정리하기", completed: false },
-    { id: 6, title: "useState 정리하기", completed: true },
-  ],
-};
-
-export default function FriendCalendar() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const handleDateChange = (value) => {
-    const next = value instanceof Date ? value : value?.[0];
-    if (!next) return;
-    setSelectedDate(next);
-  };
-
+export default function FriendCalendar({
+  initialDate,
+  onDateChange,
+  onMonthChange,
+  remainingByDate = {},
+}) {
   const getDayMeta = (date) => {
-    const key = toDateKey(date);
-    const list = dummyTodosByDate[key] ?? [];
-
-    if (list.length === 0) {
-      return { hasTodos: false, remaining: 0, allDone: false };
-    }
-
-    const remaining = list.filter((todo) => !todo.completed).length;
+    const day = remainingByDate[toDateKey(date)];
 
     return {
-      hasTodos: true,
-      remaining,
-      allDone: remaining === 0,
+      hasTodos: day?.hasTodo === true,
+      remaining: day?.remaining ?? 0,
+      allDone: day?.hasTodo === true && day.remaining === 0,
     };
   };
 
   return (
     <div className="calendar-container">
       <Calendar
-        onChange={handleDateChange}
-        value={selectedDate}
+        onChange={(value) => onDateChange?.(value instanceof Date ? value : value?.[0])}
+        onActiveStartDateChange={({ activeStartDate}) => onMonthChange?.(activeStartDate)}
+        value={initialDate}
         calendarType="gregory"
         view="month"
         prev2Label={null}
