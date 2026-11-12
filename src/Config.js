@@ -30,18 +30,10 @@ const config = {
     GET: "/api/statistic",
   },
 
-  CALENDAR: {
-    GET: "/api/todos/calendar",
-  },
-
-  CATEGORIES: {
-    GET: "/api/categories",
-  },
-
-  TODOS: {
-    LIST: "/api/todos",
-    TOGGLE_COMPLETE: (todoId, date) =>
-      `/api/todos/${todoId}/dates/${date}/complete`,
+  YOUTUBE: {
+    SEARCH: "/api/youtube/search",
+    SAVE: "/api/youtube/save",
+    ME: "/api/youtube/me",
   },
 };
 

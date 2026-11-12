@@ -52,6 +52,7 @@ const Status = () => {
     };
     return days[day] || day || "정보 없음";
   };
+    
 
   return (
     <div className="status-container">
