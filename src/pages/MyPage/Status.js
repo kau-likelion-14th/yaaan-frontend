@@ -17,6 +17,7 @@ const Status = () => {
         const response = await get(config.STATISTICS.GET);
         // 서버 응답에서 result 객체를 꺼내옵니다.
         const data = response.result || response; 
+        console.log("통계 데이터:", data);
 
         setStats([
           { 
@@ -52,6 +53,7 @@ const Status = () => {
     };
     return days[day] || day || "정보 없음";
   };
+    
 
   return (
     <div className="status-container">
