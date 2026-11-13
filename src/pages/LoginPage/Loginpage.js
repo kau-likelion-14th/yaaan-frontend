@@ -94,7 +94,10 @@ function LoginPage() {
   }, [location.pathname, location.search, navigate]);
 
   const handleClick = () => {
-    const restKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
+    const restKey =
+      process.env.REACT_APP_KAKAO_REST_API_KEY ||
+      process.env.REACT_APP_KAKAO_REST_KEY ||
+      process.env.REACT_APP_KAKAO_CLIENT_ID;
     const redirectUri =
       `${window.location.origin}/login/oauth2/code/kakao`;
 

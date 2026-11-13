@@ -19,6 +19,7 @@ const MainPage = () => {
   const [remainingByDate, setRemainingByDate] = useState({});
   const [calendarError, setCalendarError] = useState("");
   const [todoError, setTodoError] = useState("");
+  const [todoLoading, setTodoLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const dateKey = toDateKey(selectedDate);
   const year = viewDate.getFullYear();
@@ -54,6 +55,7 @@ const MainPage = () => {
   useEffect(() => {
     let active = true;
     setTodoError("");
+    setTodoLoading(true);
     setTodosByDate((prev) => ({ ...prev, [dateKey]: [] }));
 
     const fetchTodos = async () => {
@@ -72,6 +74,8 @@ const MainPage = () => {
       } catch (error) {
         console.error("Todo 조회 실패:", error);
         if (active) setTodoError("할 일을 불러오지 못했습니다.");
+      } finally {
+        if (active) setTodoLoading(false);
       }
     };
 
@@ -80,22 +84,25 @@ const MainPage = () => {
   }, [dateKey, refreshKey]);
 
   return (
-    <div className="mainpage-container">
+    <>
       {calendarError && <p role="alert">{calendarError}</p>}
       {todoError && <p role="alert">{todoError}</p>}
-      <CustomCalendar
-        initialDate={selectedDate}
-        onDateChange={setSelectedDate}
-        onMonthChange={setViewDate}
-        remainingByDate={remainingByDate}
-      />
-      <Todo
-        selectedDate={selectedDate}
-        todosByDate={todosByDate}
-        setTodosByDate={setTodosByDate}
-        onCompletedChange={() => setRefreshKey((key) => key + 1)}
-      />
-    </div>
+      <div className="mainpage-container">
+        <CustomCalendar
+          initialDate={selectedDate}
+          onDateChange={setSelectedDate}
+          onMonthChange={setViewDate}
+          remainingByDate={remainingByDate}
+        />
+        <Todo
+          loading={todoLoading}
+          selectedDate={selectedDate}
+          todosByDate={todosByDate}
+          setTodosByDate={setTodosByDate}
+          onCompletedChange={() => setRefreshKey((key) => key + 1)}
+        />
+      </div>
+    </>
   );
 };
 

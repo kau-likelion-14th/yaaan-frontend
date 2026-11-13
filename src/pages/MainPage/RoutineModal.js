@@ -23,7 +23,10 @@ const RoutineModal = ({
 
     if (!isOpen) return null;
 
+    const valid = Boolean(startDate && endDate && startDate <= endDate && repeatDays !== null && repeatDays >= 0);
+
     const handleSave = () => {
+        if (!valid) return;
         onSave({
             startDate,
             endDate,
@@ -62,6 +65,7 @@ const RoutineModal = ({
                             type="date"
                             className="date-input"
                             value={endDate}
+                            min={startDate || undefined}
                             onChange={(e) => setEndDate(e.target.value)}
                         />
                         <div className="date-initial">
@@ -89,9 +93,10 @@ const RoutineModal = ({
                         ))}
                     </div>
                 </div>
+                {!valid && <p role="status">시작일·종료일과 반복 요일을 선택해주세요. 종료일은 시작일보다 빠를 수 없습니다.</p>}
                 <div className="modal-actions">
                     <button className="leftbutton2" onClick={onClose}>취소</button>
-                    <button className="rightbutton" onClick={handleSave}>저장</button>
+                    <button className="rightbutton" disabled={!valid} onClick={handleSave}>저장</button>
                 </div>
             </div>
         </div>
