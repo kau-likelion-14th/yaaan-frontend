@@ -9,6 +9,8 @@ const TodoModal = ({
     onDelete,
     initialTodo,
     categories,
+    busy = false,
+    error = "",
 }) => {
     const isEditMode = Boolean(initialTodo);
     const categoryKeys = Object.keys(categories || {});
@@ -27,12 +29,13 @@ const TodoModal = ({
         setCategory(initialTodo?.category || defaultCategory);
         setText(initialTodo?.text || "");
         setRoutine(initialTodo?.routine || null);
+        setIsRoutineModalOpen(false);
     }, [isOpen, initialTodo, defaultCategory]);
 
     if (!isOpen) return null;
 
     const handleSave = () => {
-        if (!text.trim() || !category) return;
+        if (busy || !text.trim() || !category) return;
 
         onSave({
             text: text.trim(),
@@ -50,6 +53,8 @@ const TodoModal = ({
                 <div className="modal-title">
                     {isEditMode ? "할 일 수정하기" : "할 일 추가하기"}
                 </div>
+                {error && <p role="alert">{error}</p>}
+                <fieldset disabled={busy} style={{ border: 0, margin: 0, padding: 0 }}>
                 <div className="modal-section">
                     <div className="modal-label">카테고리</div>
                     <div className="modal-categories">
@@ -89,7 +94,7 @@ const TodoModal = ({
                         className="routine-row"
                         onClick={() => setIsRoutineModalOpen(true)}
                     >
-                        <div className="routine-label">루틴 등록하기</div>
+                        <div className="routine-label">{routine ? "루틴 수정하기" : "루틴 등록하기"}</div>
                         <div className="routine-button">{"›"}</div>
                     </button>
                 </div>
@@ -109,6 +114,7 @@ const TodoModal = ({
                         저장
                     </button>
                 </div>
+                </fieldset>
                 <RoutineModal
                     isOpen={isRoutineModalOpen}
                     initialRoutine={routine}
